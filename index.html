@@ -1,81 +1,40 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Syntra Commander</title>
-  <style>
-    body {
-      background-color: #111;
-      color: #fff;
-      font-family: 'Segoe UI', sans-serif;
-      text-align: center;
-      padding: 40px;
-    }
-
-    h1 {
-      font-size: 2.5em;
-      margin-bottom: 20px;
-      color: #00ffaa;
-    }
-
-    .button-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 20px;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
-    .control-button {
-      background-color: #222;
-      border: 2px solid #333;
-      border-radius: 10px;
-      padding: 20px;
-      color: #00ffaa;
-      font-size: 1em;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-
-    .control-button:hover {
-      background-color: #333;
-      border-color: #00ffaa;
-      color: #fff;
-    }
-
-    .footer {
-      margin-top: 40px;
-      font-size: 0.85em;
-      color: #888;
-    }
-  </style>
+  <title>Remote Commands</title>
 </head>
 <body>
+  <h2>Send Command to Listener</h2>
+  <button onclick="sendCommand('open_firefox')">Open Firefox</button>
+  <button onclick="sendCommand('shutdown')">Shutdown</button>
+  <button onclick="sendCommand('none')">Clear Command</button>
 
-  <h1>Syntra Commander Panel</h1>
-
-  <div class="button-grid">
-    <button class="control-button" onclick="sendCommand('launch_macro')">Launch Macro</button>
-    <button class="control-button" onclick="sendCommand('refresh_macros')">Refresh Macros</button>
-    <button class="control-button" onclick="sendCommand('run_sequence_1')">Run Sequence 1</button>
-    <button class="control-button" onclick="sendCommand('run_sequence_2')">Run Sequence 2</button>
-    <button class="control-button" onclick="sendCommand('shutdown')">Shutdown PC</button>
-    <button class="control-button" onclick="sendCommand('reboot')">Reboot PC</button>
-  </div>
-
-  <div class="footer">
-    Built by Syntra | Remote AI Automation Control
-  </div>
-
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
   <script>
-    function sendCommand(action) {
-      const payload = `{
-  "action": "${action}"
-}`;
-      alert(`COPY and PASTE this into your command.json file:\n\n${payload}`);
-      window.open("https://github.com/stratrun/commander/edit/main/command.json", "_blank");
+    const firebaseConfig = {
+  "type": "service_account",
+  "project_id": "command-51a64",
+  "private_key_id": "4e7ca11b3aaff8fe002f48571226261b7655fbd8",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDgVzFtzIouE5BW\ndgQcVcQ98zXnqtNdhKP6HASetwMiCvzWMDhbFMtY0j8UGv/TETExV380XMlGkCsT\nXlX/aiST9XMUEUGr6iM8M7IwahZ9TAy56wuT0Fsd+vH/uc1LwcKAJtSv51U54AD3\neUxjVpOUD6kI1Xd3RvXkAZw5vOGwGgZ5QIMA2AbjN2aA8X5D503v1R4gH+G+Ama9\ndkSoAIraxT1PU5+JVSnDmV1fRancuWtRxkS2u5/+nbQd7pwzss4YB7WQue8EoMCA\n/vV+M5TKVQR9jywA+trNCRQ2cnsGSLYCFN2FN1m3TckleUr9LqvEx2W6YDrYMlFo\nmCaztZUZAgMBAAECggEAHwGuIUDd8FRf5LNXChuIjg9paeWgZRKKH21z7gPZeQEP\nxQLRJzWOjW4xrbO1nBSKOgmf2TrhztDqQzkMpcqj15dbGnDwJLStvgpfHHXtOdAj\nCidEaF+p2FDw1al2iHv1SAUV7GIK0370Yz/uoOQ8bYBkmoX2hxPVtHfMgeZrQw1z\nhOvLVXwheO5aBfJ9FvA70zy2nqHB8jj4xVOY2ZrxTc5IsMiu1b1P2TOLWEZQpt96\nb8RHGUDln4BOchCrNZ1rRJDFVSpSf1mj7K6Ssd+NYlxMbLwZnCDX+fOXlLAiVfzS\nAhQWy/ou3cf/4xqgVjpfBNDNacyY5Sqie3CjfcKPyQKBgQD3C8R6VeXdJF4hYAnr\nuZHUJnkOS7WjxMdzwbxuJdMkUv/lpYNWuKBcoMSrQII2sIkB+9NuRVhEan8wztZv\nKLSkCkPBsLyLWNLuXIcZ2wJTBJ2Y/rp7LC9MZGXIdGSWup54y7Dp+bW2B395L14q\ncvG7FvtZvBygvpw0GGsOAnmJywKBgQDoeMCXTLwKvXDJGuYEVzK/fxIwLipaWXc7\nm+gDd9bV61KG40Kk/raQsl0v8vdtJb3bBzCJwJRIhL8Z0tJjd9drgnzY+JZ3sKlF\nGrtdsCErG8GD/3dNZeGKmV/RmbQohHCHEJKdrqMUAI4cGNql+HDoVhNuVDzbHCSt\n9SPM0zRQKwKBgQCofAYLyPlz0JHCAVXCxlSGc5asAUZn4pSEheSU2ocdht2vKSph\nwpjbk2mNwfkMg2ltSOnxkqmYP2lvSCFGvmQ0XCvJtVdhUbrJhaE+KPd01vkElvVn\ne8LmPrKL+5V+ltftWj3V1M/wzTxK0dtO6AWkqw/RK1H67wRpIx4f9+Ab8QKBgQCf\nKmX6cXBiDhiVqJQKLsWxNUh3snQPDihDqNgu37M5HfiQIDN2EmtfILAK71iW43tc\n5kxGVJNyH2lUPfMMZXYZxurCB1nGMy+B/+5/E+Nxx3w0awn89R96LM7dDFa8UwlU\ngHVR/srrHAIwnJe/gR2VBbIiHQzZnChE7o2HZKfxpwKBgQDvTO/AbxysSP9P/5ov\ntMxb+23Fi4+M69UYt06Jw7TZSTai5JQ1JnmgXPt9Qa6CyW8zipaCutZuliHBCIBK\ndyK3Wcq2biAhHT225WA62ZjN8mSmzgV+5BpyjVx63n5TIl5C9dWQ/5CFPQTsLAnb\nbE9bSuKWF+L/qmwWN1St8q9NtQ==\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-fbsvc@command-51a64.iam.gserviceaccount.com",
+  "client_id": "106945791232000337697",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-fbsvc%40command-51a64.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
+;
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    function sendCommand(cmd) {
+      db.ref("commands").set(cmd).then(() => {
+        alert("Command sent: " + cmd);
+      });
     }
   </script>
-
 </body>
 </html>
