@@ -1,17 +1,19 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Remote Commands</title>
+  <title>Control Panel</title>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 </head>
 <body>
-  <h2>Send Command to Listener</h2>
+  <h1>Remote Control Panel</h1>
   <button onclick="sendCommand('open_firefox')">Open Firefox</button>
   <button onclick="sendCommand('shutdown')">Shutdown</button>
-  <button onclick="sendCommand('none')">Clear Command</button>
+  <button onclick="sendCommand('launch_macro')">Launch Macro</button>
+  <button onclick="sendCommand('none')">Clear</button>
 
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
   <script>
+    // Replace with your own Firebase project config
     const firebaseConfig = {
   "type": "service_account",
   "project_id": "command-51a64",
@@ -26,15 +28,17 @@
   "universe_domain": "googleapis.com"
 }
 ;
-
     firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
+    var db = firebase.database();
 
     function sendCommand(cmd) {
-      db.ref("commands").set(cmd).then(() => {
-        alert("Command sent: " + cmd);
-      });
+      db.ref("action").set(cmd)
+        .then(() => console.log("Sent:", cmd))
+        .catch((error) => console.error("Error:", error));
     }
   </script>
 </body>
 </html>
+
+
+
