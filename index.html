@@ -2,71 +2,80 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Syntra Control Panel</title>
+  <title>Syntra Commander</title>
   <style>
     body {
-      background-color: #0f0f0f;
-      color: #ffffff;
+      background-color: #111;
+      color: #fff;
       font-family: 'Segoe UI', sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      text-align: center;
       padding: 40px;
     }
 
     h1 {
-      font-size: 2em;
-      margin-bottom: 30px;
+      font-size: 2.5em;
+      margin-bottom: 20px;
+      color: #00ffaa;
     }
 
     .button-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
       gap: 20px;
-      width: 100%;
       max-width: 800px;
+      margin: 0 auto;
     }
 
     .control-button {
-      background-color: #1e1e1e;
-      border: 2px solid #3c3c3c;
-      border-radius: 12px;
+      background-color: #222;
+      border: 2px solid #333;
+      border-radius: 10px;
       padding: 20px;
+      color: #00ffaa;
       font-size: 1em;
-      color: #ffffff;
       cursor: pointer;
-      transition: all 0.2s ease-in-out;
+      transition: 0.2s;
     }
 
     .control-button:hover {
-      background-color: #2a2a2a;
+      background-color: #333;
       border-color: #00ffaa;
-      color: #00ffaa;
+      color: #fff;
+    }
+
+    .footer {
+      margin-top: 40px;
+      font-size: 0.85em;
+      color: #888;
     }
   </style>
 </head>
 <body>
 
-  <h1>Syntra Control Panel</h1>
+  <h1>Syntra Commander Panel</h1>
 
   <div class="button-grid">
-    <button class="control-button" onclick="runCommand('open_operator')">Open Operator</button>
-    <button class="control-button" onclick="runCommand('refresh_macros')">Refresh Macros</button>
-    <button class="control-button" onclick="runCommand('start_sequence_1')">Start Sequence 1</button>
-    <button class="control-button" onclick="runCommand('launch_site_build')">Launch Site Build</button>
-    <button class="control-button" onclick="runCommand('run_diagnostics')">Run Diagnostics</button>
-    <button class="control-button" onclick="runCommand('deploy_to_production')">Deploy</button>
+    <button class="control-button" onclick="sendCommand('launch_macro')">Launch Macro</button>
+    <button class="control-button" onclick="sendCommand('refresh_macros')">Refresh Macros</button>
+    <button class="control-button" onclick="sendCommand('run_sequence_1')">Run Sequence 1</button>
+    <button class="control-button" onclick="sendCommand('run_sequence_2')">Run Sequence 2</button>
+    <button class="control-button" onclick="sendCommand('shutdown')">Shutdown PC</button>
+    <button class="control-button" onclick="sendCommand('reboot')">Reboot PC</button>
+  </div>
+
+  <div class="footer">
+    Built by Syntra | Remote AI Automation Control
   </div>
 
   <script>
-    function runCommand(commandName) {
-      alert("Command sent: " + commandName);
-      // Future logic: fetch call or local macro integration
-      // Example:
-      // fetch("https://your-github-url.com/command.json", {
-      //   method: "POST",
-      //   body: JSON.stringify({ action: commandName })
-      // });
+    function sendCommand(action) {
+      const now = new Date().toISOString();
+      const payload = `{
+  "action": "${action}",
+  "timestamp": "${now}"
+}`;
+      alert(`COPY and PASTE this into your command.json file:\n\n${payload}`);
+      window.open("https://github.com/stratrun/commander/edit/main/command.json", "_blank");
     }
   </script>
 
