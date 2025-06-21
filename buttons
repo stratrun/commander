@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Syntra Control Panel</title>
+  <style>
+    body {
+      background-color: #0f0f0f;
+      color: #ffffff;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px;
+    }
+
+    h1 {
+      font-size: 2em;
+      margin-bottom: 30px;
+    }
+
+    .button-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 20px;
+      width: 100%;
+      max-width: 800px;
+    }
+
+    .control-button {
+      background-color: #1e1e1e;
+      border: 2px solid #3c3c3c;
+      border-radius: 12px;
+      padding: 20px;
+      font-size: 1em;
+      color: #ffffff;
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+    }
+
+    .control-button:hover {
+      background-color: #2a2a2a;
+      border-color: #00ffaa;
+      color: #00ffaa;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Syntra Control Panel</h1>
+
+  <div class="button-grid">
+    <button class="control-button" onclick="runCommand('open_operator')">Open Operator</button>
+    <button class="control-button" onclick="runCommand('refresh_macros')">Refresh Macros</button>
+    <button class="control-button" onclick="runCommand('start_sequence_1')">Start Sequence 1</button>
+    <button class="control-button" onclick="runCommand('launch_site_build')">Launch Site Build</button>
+    <button class="control-button" onclick="runCommand('run_diagnostics')">Run Diagnostics</button>
+    <button class="control-button" onclick="runCommand('deploy_to_production')">Deploy</button>
+  </div>
+
+  <script>
+    function runCommand(commandName) {
+      alert("Command sent: " + commandName);
+      // Future logic: fetch call or local macro integration
+      // Example:
+      // fetch("https://your-github-url.com/command.json", {
+      //   method: "POST",
+      //   body: JSON.stringify({ action: commandName })
+      // });
+    }
+  </script>
+
+</body>
+</html>
