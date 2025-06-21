@@ -69,10 +69,8 @@
 
   <script>
     function sendCommand(action) {
-      const now = new Date().toISOString();
       const payload = `{
-  "action": "${action}",
-  "timestamp": "${now}"
+  "action": "${action}"
 }`;
       alert(`COPY and PASTE this into your command.json file:\n\n${payload}`);
       window.open("https://github.com/stratrun/commander/edit/main/command.json", "_blank");
