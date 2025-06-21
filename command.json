@@ -1,3 +1,6 @@
 {
-  "action": "launch_macr"
+  "rules": {
+    ".read": true,
+    ".write": true
+  }
 }
